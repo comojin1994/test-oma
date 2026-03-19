@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion';
-import { Zap, Menu, X } from 'lucide-react';
+import { Zap, Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
 import { useScrollProgress } from '../hooks/useScrollProgress';
+import { useTheme } from '../context/ThemeContext';
 
 const NAV_LINKS = [
   { label: '소개', href: '#hero' },
   { label: '특징', href: '#features' },
+  { label: '가격', href: '#pricing' },
   { label: '성과', href: '#stats' },
-  { label: '시작하기', href: '#cta' },
+  { label: 'FAQ', href: '#faq' },
 ];
 
 export function Navbar() {
   const { scrollY } = useScrollProgress();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const isScrolled = scrollY > 50;
 
   return (
@@ -48,6 +51,18 @@ export function Navbar() {
               {link.label}
             </motion.a>
           ))}
+
+          {/* Theme toggle */}
+          <motion.button
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </motion.button>
+
           <motion.a
             href="#cta"
             whileHover={{ scale: 1.05 }}
@@ -58,14 +73,23 @@ export function Navbar() {
           </motion.a>
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden text-gray-400 hover:text-white"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="메뉴 열기"
-        >
-          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile controls */}
+        <div className="md:hidden flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+          <button
+            className="text-gray-400 hover:text-white"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="메뉴 열기"
+          >
+            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
